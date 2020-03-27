@@ -13,21 +13,36 @@ class ViewController: UIViewController {
 
     var animations = [AnimationView]()
 
+    lazy var stackView: UIStackView = createStack(jsonNames: [
+        "lottiedata",
+        "servishero_loading",
+        "boat",
+        "9squares"
+    ])
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+
+        guard let _ = UIFont(name: "BureauGrotExtraCompressed-Bold", size: UIFont.labelFontSize) else {
+            fatalError("""
+                Failed to load the "Bureau Grot Extra Compressed Bold" font.
+                Make sure the font file is included in the project and the font name is spelled correctly.
+                """
+            )
+        }
+        
         setupDesign()
     }
 
     func setupDesign() {
-        let stack = createStack(jsonNames: ["lottiedata", "servishero_loading"])
-        view.addSubview(stack)
+        view.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: view.topAnchor),
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stack.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
 
         animations.forEach { (view) in
@@ -42,7 +57,7 @@ class ViewController: UIViewController {
             let view = AnimationView(name: name)
             view.animationSpeed = 1
             view.loopMode = .loop
-            view.contentMode = .scaleAspectFill
+            view.contentMode = .scaleAspectFit
             view.translatesAutoresizingMaskIntoConstraints = false
             animations.append(view)
             stackView.addArrangedSubview(view)
@@ -50,7 +65,7 @@ class ViewController: UIViewController {
 
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fillEqually
         return stackView
     }
 
